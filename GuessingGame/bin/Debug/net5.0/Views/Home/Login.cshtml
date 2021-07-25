@@ -1,0 +1,52 @@
+﻿@model LoginModel
+
+@{
+    ViewData["Title"] = "Welcome";
+
+    var modelIsValid = ViewData.ModelState.IsValid;
+
+    var loginFormDisplayStyle = modelIsValid ? "none" : "block";
+}
+
+<div class="text-center">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: justify;">
+            @await Html.PartialAsync("_Rules")
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="text-align: center">
+            @if (modelIsValid)
+            {
+                <button id="start-game-button" class="btn btn-lg btn-outline-secondary">
+                    Start game
+                </button>
+
+                <script type="text/javascript">
+                    var startGameButtonElem = document.getElementById("start-game-button");
+                    startGameButtonElem.addEventListener("click", (event) => {
+                        let self = event.target;
+                        self.style.display = "none"
+                        let loginForm = document.getElementById("login-form");
+                        loginForm.style.display = "block";
+                    });
+                </script>
+            }
+            <form asp-action="Login" asp-controller="Home" method="post" id="login-form" style="display: @loginFormDisplayStyle">
+                <div asp-validation-summary="ModelOnly" ></div>
+                <div class="form-group">
+                    <label asp-for="PlayerName"></label>
+                    <input asp-for="PlayerName" autofocus="autofocus" />
+                    <span asp-validation-for="PlayerName" style="display: block; color: red;"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg btn-outline-secondary">
+                        Continue
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

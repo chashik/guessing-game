@@ -1,0 +1,78 @@
+﻿@using System.Globalization
+
+@model LeadersModel
+
+@{
+    ViewData["Title"] = "Leader Board";
+
+    var leaderModels = Model.Leaders;
+
+    var champion = leaderModels.FirstOrDefault();
+}
+
+<div class="text-center">
+    <div class="row">
+        <div class="col-md-12" style="text-align: center;">
+            <h3>Leaders Board</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="text-align: center;">
+            @if (champion == default(LeaderModel))
+            {
+                <h4>Seems like you will be the lucky first one!</h4>
+                <a asp-action="Index" asp-controller="Game">Back to game</a>
+            }
+            else
+            {
+                <table class="table-bordered leaders-table">
+                    <tr>
+                        <th style="width: 6%;">
+                            <label>#</label>
+                        </th>
+                        <th style="width: 17%;">
+                            @Html.LabelFor(model => champion.Name)
+                        </th>
+                        <th style="width: 17%;">
+                            @Html.LabelFor(model => champion.Score)
+                        </th>
+                        <th style="width: 13%;">
+                            @Html.LabelFor(model => champion.GamesPlayed)
+                        </th>
+                        <th style="width: 13%;">
+                            @Html.LabelFor(model => champion.GuessesMade)
+                        </th>
+                        <th style="width: 17%;">
+                            @Html.LabelFor(model => champion.MatchesWithPosition)
+                        </th>
+                        <th style="width: 17%;">
+                            @Html.LabelFor(model => champion.MatchesWithoutPosition)
+                        </th>
+                    </tr>
+                    @for (int i = 0, l = leaderModels.Count; i < l; i++)
+                    {
+                        var leaderModel = leaderModels[i];
+                <tr>
+                    <td>@(i+1).</td>
+                    <td>@leaderModel.Name</td>
+                    <td>@leaderModel.Score.ToString("0.000", CultureInfo.InvariantCulture)</td>
+                    <td>@leaderModel.GamesPlayed</td>
+                    <td>@leaderModel.GuessesMade</td>
+                    <td>@leaderModel.MatchesWithPosition</td>
+                    <td>@leaderModel.MatchesWithoutPosition</td>
+                </tr>
+                    }
+                </table>
+                <span>* Players with the same score take the same position. Names are comma-separated.</span>
+            }
+        </div>
+    </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: justify;">
+            @await Html.PartialAsync("_Rules")
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+</div>

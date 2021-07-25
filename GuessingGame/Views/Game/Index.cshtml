@@ -1,0 +1,149 @@
+﻿@model GameModel
+
+@{
+    ViewData["Title"] = "Guessing game";
+}
+
+<div class="text-center">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: justify;">
+            @await Html.PartialAsync("_Rules")
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+    <form asp-action="Index" asp-controller="Game" method="post" id="game-form">
+        @Html.HiddenFor(model => model.PlayerName)
+        @Html.HiddenFor(model => model.TriesLeft)
+        <div class="row">
+            <div class="col-md-3 bckgrnd-aliceblue" style="text-align: right;">
+                <label asp-for="PlayerName"></label>
+                @Html.DisplayFor(model => model.PlayerName)
+            </div>
+            <div class="col-md-6" style="text-align: center">
+                <script type="text/javascript">
+                    function digitInputKeyUp(inputElem, focusOnSubmit) {
+                        if (inputElem.value.length < inputElem.maxLength) {
+                            return;
+                        }
+                        if (focusOnSubmit) {
+                            document.getElementById("game-from-submit").focus();
+                        }
+                        else {
+                            inputElem.nextElementSibling.focus();
+                        }
+                    }
+                </script>
+                <div asp-validation-summary="ModelOnly"></div>
+                <span asp-validation-for="CurrentGuess" style="color: red;"></span>
+                <span asp-validation-for="CurrentGuess.FirstDigit" style="color: red;"></span>
+                <span asp-validation-for="CurrentGuess.SecondDigit" style="color: red;"></span>
+                <span asp-validation-for="CurrentGuess.ThirdDigit" style="color: red;"></span>
+                <span asp-validation-for="CurrentGuess.FourthDigit" style="color: red;"></span>
+                <div class="form-group">
+                    <label asp-for="CurrentGuess"></label>
+                    <input asp-for="CurrentGuess.FirstDigit" onkeyup="digitInputKeyUp(this)"
+                           maxlength="1" size="1" autofocus="autofocus" />
+                    <input asp-for="CurrentGuess.SecondDigit" onkeyup="digitInputKeyUp(this)"
+                           maxlength="1" size="1" />
+                    <input asp-for="CurrentGuess.ThirdDigit" onkeyup="digitInputKeyUp(this)"
+                           maxlength="1" size="1" />
+                    <input asp-for="CurrentGuess.FourthDigit" onkeyup="digitInputKeyUp(this, true)"
+                           maxlength="1" size="1" />
+                </div>
+            </div>
+            <div class="col-md-3 bckgrnd-aliceblue" style="text-align: left;">
+                <label asp-for="TriesLeft"></label>
+                @Html.DisplayFor(model => model.TriesLeft)
+            </div>
+        </div>
+        <div class=" row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button id="game-from-submit" type="submit" class="btn btn-lg btn-outline-secondary">
+                        Make Guess
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 bckgrnd-aliceblue" style="text-align: right;">
+                @if (Model.PreviousTry != default)
+                {
+                    var previousTry = Model.PreviousTry;
+                    <label asp-for="PreviousTry"></label>
+            <div class="form-group">
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.FirstDigit" />
+                @Html.HiddenFor(model => model.PreviousTry.FirstDigit)
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.SecondDigit" />
+                @Html.HiddenFor(model => model.PreviousTry.SecondDigit)
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.ThirdDigit" />
+                @Html.HiddenFor(model => model.PreviousTry.ThirdDigit)
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.FourthDigit" />
+                @Html.HiddenFor(model => model.PreviousTry.FourthDigit)
+            </div>
+            <div class="form-group">
+                <label asp-for="PreviousTry.MatchesWithPosition"></label>
+                <span class="score">@previousTry.MatchesWithPosition</span>
+                @Html.HiddenFor(model => model.PreviousTry.MatchesWithPosition)
+                <label asp-for="PreviousTry.MatchesWithoutPosition"></label>
+                <span class="score">@previousTry.MatchesWithoutPosition</span>
+                @Html.HiddenFor(model => model.PreviousTry.MatchesWithoutPosition)
+            </div>
+                }
+            </div>
+            <div class="col-md-4" style="text-align: center;">
+                @if (Model.GuessLog != default)
+                {
+                    var guessLog = Model.GuessLog;
+
+                    if (guessLog.Count > 0)
+                    {
+                        <label asp-for="GuessLog"></label>
+                        for (int i = 0, l = guessLog.Count; i < l; i++)
+                        {
+                            var guess = guessLog[i];
+            <div class="form-group">
+                @((i + 1).ToString() + ". ")
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.FirstDigit" />
+                @Html.HiddenFor(model => model.GuessLog[i].FirstDigit)
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.SecondDigit" />
+                @Html.HiddenFor(model => model.GuessLog[i].SecondDigit)
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.ThirdDigit" />
+                @Html.HiddenFor(model => model.GuessLog[i].ThirdDigit)
+                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.FourthDigit" />
+                @Html.HiddenFor(model => model.GuessLog[i].FourthDigit)
+            </div>
+                        }
+                    }
+                }
+            </div>
+            <div class="col-md-4 bckgrnd-aliceblue" style="text-align: left;">
+                @if (Model.BestResult != default)
+                {
+                    var bestResult = Model.BestResult;
+                    <label asp-for="BestResult"></label>
+                    <div class="form-group">
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.FirstDigit" />
+                        @Html.HiddenFor(model => model.BestResult.FirstDigit)
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.SecondDigit" />
+                        @Html.HiddenFor(model => model.BestResult.SecondDigit)
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.ThirdDigit" />
+                        @Html.HiddenFor(model => model.BestResult.ThirdDigit)
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.FourthDigit" />
+                        @Html.HiddenFor(model => model.BestResult.FourthDigit)
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BestResult.MatchesWithPosition"></label>
+                        <span class="score">@bestResult.MatchesWithPosition</span>
+                        @Html.HiddenFor(model => model.BestResult.MatchesWithPosition)
+                        <label asp-for="BestResult.MatchesWithoutPosition"></label>
+                        <span class="score">@bestResult.MatchesWithoutPosition</span>
+                        @Html.HiddenFor(model => model.BestResult.MatchesWithoutPosition)
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+</div>

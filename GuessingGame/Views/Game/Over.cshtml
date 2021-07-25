@@ -1,0 +1,146 @@
+﻿@model GameModel
+
+@{
+    ViewData["Title"] = "Game over";
+
+    var guessLog = Model.GuessLog;
+
+    if (guessLog == default(IReadOnlyList<GuessModel>) || guessLog.Count == 0)
+    {
+        throw new InvalidOperationException("Empty GuessLog for accomplished Game!");
+    }
+
+    var previousTry = Model.PreviousTry;
+
+    if (previousTry == default(GuessModel))
+    {
+        throw new InvalidOperationException("No PreviousTry for accomplished Game!");
+    }
+
+    var bestResult = Model.BestResult;
+
+    if (bestResult == default(GuessModel))
+    {
+        throw new InvalidOperationException("No BestResult for accomplished Game!");
+    }
+
+    var secret = Model.Secret;
+
+    if (string.IsNullOrEmpty(secret) || secret.Length != 4)
+    {
+        throw new InvalidOperationException("Invalid state: empty on invalid secret!");
+    }
+
+    var gameScore = Model.Score;
+
+    var gameResult = gameScore == 4
+        ? "Congratulations, you won!"
+        : gameScore > 2
+            ? "You were close!"
+            : "You lost!";
+
+    var backgroundColor = gameScore == 4
+        ? "aquamarine;"
+        : gameScore > 2
+            ? "peachpuff;"
+            : "salmon;";
+}
+
+<div class="text-center">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: justify;">
+            @await Html.PartialAsync("_Rules")
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+        @Html.HiddenFor(model=>model.PlayerName)
+<div class=" row">
+    <div class="col-md-12" 
+         style="padding-bottom: 5px; text-align: center; margin-bottom:5px; background-color: @backgroundColor">
+        <span>Game over!</span>
+        <span>@gameResult</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3" style="text-align: right;">
+        <label asp-for="PlayerName"></label>
+        @Html.DisplayFor(model => model.PlayerName)
+    </div>
+    <div class="col-md-6" style="text-align: center;">
+        <label asp-for="Secret"></label>
+        <input type="text" value="@secret.Substring(0, 1)" disabled="disabled" maxlength="1" size="1" />
+        <input type="text" value="@secret.Substring(1, 1)" disabled="disabled" maxlength="1" size="1" />
+        <input type="text" value="@secret.Substring(2, 1)" disabled="disabled" maxlength="1" size="1" />
+        <input type="text" value="@secret.Substring(3, 1)" disabled="disabled" maxlength="1" size="1" />
+    </div>
+    <div class="col-md-3" style="text-align: left;">
+        <label>Tries used:&nbsp;</label><span>@guessLog.Count</span>
+    </div>
+</div>
+<div class="row">
+            <div class="col-md-4 bckgrnd-aliceblue" style="text-align: right;">
+                <label asp-for="PreviousTry"></label>
+                    <div class="form-group">
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.FirstDigit" />
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.SecondDigit" />
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.ThirdDigit" />
+                        <input type="text" disabled="disabled" maxlength="1" size="1" value="@previousTry.FourthDigit" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PreviousTry.MatchesWithPosition"></label>
+                        <span class="score">@previousTry.MatchesWithPosition</span>
+                        <label asp-for="PreviousTry.MatchesWithoutPosition"></label>
+                        <span class="score">@previousTry.MatchesWithoutPosition</span>
+                    </div>
+            </div>
+            <div class="col-md-4" style="text-align: center;">
+                        <label asp-for="GuessLog"></label>
+                        @for (int i = 0, l = guessLog.Count; i < l; i++)
+                        {
+                            var guess = guessLog.ElementAt(i);
+                            <div class="form-group">
+                                @((i + 1).ToString() + ". ")
+                                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.FirstDigit" />
+                                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.SecondDigit" />
+                                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.ThirdDigit" />
+                                <input type="text" disabled="disabled" maxlength="1" size="1" value="@guess.FourthDigit" />
+                            </div>
+                        }
+            </div>
+            <div class="col-md-4 bckgrnd-aliceblue" style="text-align: left;">
+                <label asp-for="BestResult"></label>
+                <div class="form-group">
+                    <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.FirstDigit" />
+                    <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.SecondDigit" />
+                    <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.ThirdDigit" />
+                    <input type="text" disabled="disabled" maxlength="1" size="1" value="@bestResult.FourthDigit" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="BestResult.MatchesWithPosition"></label>
+                    <span class="score">@bestResult.MatchesWithPosition</span>
+                    <label asp-for="BestResult.MatchesWithoutPosition"></label>
+                    <span class="score">@bestResult.MatchesWithoutPosition</span>
+                </div>
+            </div>
+ </div>
+<div class="row">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4" style="padding-top: 10px;">
+        <div class="form-group">
+            <a asp-action="Index" asp-controller="Game" class="btn btn-outline-secondary">
+                New Game
+            </a>
+            <a asp-action="Leaders" asp-controller="Home" class="btn btn-outline-secondary">
+                Leaders Board
+            </a>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+</div>
+</div>
