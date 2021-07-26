@@ -132,16 +132,16 @@ namespace GuessingGame.Services
 
             GuessScore previousScore = guessScores.First(s => s.GuessId == previousGuess.Id);
 
-            model.PreviousTry = GameHelper.CreateGuessModel(previousGuess, previousScore);
+            model.PreviousTry = ModelHelper.CreateGuessModel(previousGuess, previousScore);
 
             GuessScore bestScore = guessScores.Last();
 
             Guess bestGuess = guesses.First(p => p.Id == bestScore.GuessId);
 
-            model.BestResult = GameHelper.CreateGuessModel(bestGuess, bestScore);
+            model.BestResult = ModelHelper.CreateGuessModel(bestGuess, bestScore);
 
             model.GuessLog = guesses
-                .Select(p => GameHelper.CreateGuessModel(
+                .Select(p => ModelHelper.CreateGuessModel(
                     p,
                     guessScores.First(s => s.GuessId == p.Id)))
                 .ToArray();

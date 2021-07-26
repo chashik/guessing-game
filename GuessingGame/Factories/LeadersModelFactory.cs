@@ -41,14 +41,14 @@ namespace GuessingGame.Factories
 
                     System.Collections.Generic.ICollection<Domain.Game> games = await _gameService.GetGamesByPlayerId(leader.Id);
 
-                    leaderModels[i] = GameHelper.CreateLeaderModel(leader, games);
+                    leaderModels[i] = ModelHelper.CreateLeaderModel(leader, games);
                 }
 
             return new LeadersModel
             {
                 IsAuthorized = true,
                 PlayerName = playerName,
-                Leaders = GameHelper.MergeLeaderModels(leaderModels)
+                Leaders = ModelHelper.MergeLeaderModels(leaderModels)
             };
         }
 
