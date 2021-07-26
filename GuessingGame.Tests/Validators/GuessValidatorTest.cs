@@ -17,7 +17,7 @@ namespace GuessingGame.Tests.Validators
         [Test]
         public void ShouldRecognizeAsNotValidIfNotADigitPresents()
         {
-            var guessModel = new GuessModel
+            GuessModel guessModel = new()
             {
                 FirstDigit = "k",
                 SecondDigit = "m",
@@ -31,7 +31,7 @@ namespace GuessingGame.Tests.Validators
         [Test]
         public void ShouldRecognizeAsNotValidIfMoreThanOneDigitPresent()
         {
-            var guessModel = new GuessModel
+            GuessModel guessModel = new()
             {
                 FirstDigit = "1",
                 SecondDigit = "47",
@@ -45,7 +45,7 @@ namespace GuessingGame.Tests.Validators
         [Test]
         public void ShouldRecognizeAsNotValidIfDigitsNotUnique()
         {
-            var guessModel = new GuessModel
+            GuessModel guessModel = new()
             {
                 FirstDigit = "1",
                 SecondDigit = "7",
@@ -59,7 +59,7 @@ namespace GuessingGame.Tests.Validators
         [Test]
         public void ShouldRecognizeAsInvalidIfStartsWithZero()
         {
-            var guessModel = new GuessModel
+            GuessModel guessModel = new()
             {
                 FirstDigit = "0",
                 SecondDigit = "2",
@@ -73,7 +73,7 @@ namespace GuessingGame.Tests.Validators
         [Test]
         public void ShouldRecognizeAsValid()
         {
-            var guessModel = new GuessModel
+            GuessModel guessModel = new()
             {
                 FirstDigit = "1",
                 SecondDigit = "2",
