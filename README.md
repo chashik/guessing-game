@@ -1,5 +1,12 @@
 # Guessing Game
 
+Minor .NET 5.0 Web app and unit tests demo. 
+
+TODO (still have some unfinished tasks): 
+1. Model factory 
+2. Move inline Javascript and styles into files / bundles
+3. External authentication
+
 Implement Web-based application - guessing game. 
 
 Game rules:
